@@ -129,6 +129,26 @@ sub type( $self ) {
     @{ $self->category };
 };
 
+sub create( $self, %options ) {
+    $self->service->call('AddPhonebookEntry')->data
+}
+
+sub delete( $self, %options ) {
+    $self->service->call('DeletePhonebookEntry',
+        NewPhonebookID => $self->phonebook->id,
+        NewPhonebookEntryID => $self->uniqueid
+    )->data
+}
+
+sub save( $self ) {
+    my $payload = $self->build_structure;
+    $self->service->call('DeletePhonebookEntry',
+        NewPhonebookID => $self->phonebook->id,
+        NewPhonebookEntryID => $self->uniqueid,
+        NewPhonebookEntryData => $payload,
+    )->data
+}
+
 package Net::Fritz::PhonebookEntry::Number;
 use strict;
 use Moo;
