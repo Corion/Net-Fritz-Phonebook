@@ -49,6 +49,7 @@ my %module = (
         'Carp'     => 0,
         'Filter::signatures' => 0,
         'Net::Fritz' => 0,
+        'Moo'        => 2,
     },
     TEST_REQUIRES => {
         'Test::More'   => 0,

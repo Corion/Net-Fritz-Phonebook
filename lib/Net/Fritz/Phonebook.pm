@@ -1,6 +1,6 @@
 package Net::Fritz::Phonebook;
 use strict;
-use Moo;
+use Moo 2;
 use Filter::signatures;
 use feature 'signatures';
 no warnings 'experimental::signatures';
@@ -84,7 +84,7 @@ sub _build_entries( $self, %options ) {
 
 package Net::Fritz::PhonebookEntry;
 use strict;
-use Moo;
+use Moo 2;
 use Filter::signatures;
 use feature 'signatures';
 no warnings 'experimental::signatures';
@@ -151,7 +151,7 @@ sub save( $self ) {
 
 package Net::Fritz::PhonebookEntry::Number;
 use strict;
-use Moo;
+use Moo 2;
 use Filter::signatures;
 use feature 'signatures';
 no warnings 'experimental::signatures';
