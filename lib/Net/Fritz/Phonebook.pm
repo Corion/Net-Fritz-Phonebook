@@ -90,9 +90,9 @@ use feature 'signatures';
 no warnings 'experimental::signatures';
 
 use Data::Dumper;
-#has 'phonebook' => (
-#    is => 'ro',
-#);
+has 'phonebook' => (
+    is => 'ro',
+);
 
 has 'uniqueid' => (
     is => 'ro',
