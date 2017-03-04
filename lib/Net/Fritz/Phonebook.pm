@@ -64,6 +64,11 @@ has 'content' => (
     },
 );
 
+has 'entries' => (
+    is => 'lazy',
+    builder => 1,
+);
+
 sub create( $self, %options ) {
     $self->service->call('AddPhonebook')->data
 }
@@ -72,13 +77,9 @@ sub delete( $self, %options ) {
     $self->service->call('DeletePhonebook', NewPhonebookID => $self->id )->data
 }
 
-sub entries( $self, %options ) {
+sub _build_entries( $self, %options ) {
     my $c = $self->content;
-    #warn Dumper $c;
-    map { Net::Fritz::PhonebookEntry->new( phonebook => $self, %$_ ) } @{ $self->content->{phonebook}->[0]->{contact} };
-    #$options{ timestamp } ||= '1900-01-01 00:00:01';
-    #my $count = $self->service->call('GetNumberOfEntries', timestamp => $options{ timestamp })->data
-    #$self->service->call('GetPhonebookEntries', timestamp => $options{ timestamp })->data
+    [map { Net::Fritz::PhonebookEntry->new( phonebook => $self, %$_ ) } @{ $self->content->{phonebook}->[0]->{contact} }];
 }
 
 package Net::Fritz::PhonebookEntry;
