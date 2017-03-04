@@ -100,6 +100,11 @@ has 'phonebook' => (
     is => 'ro',
 );
 
+has 'id' => (
+    is => 'lazy',
+    builder => 1,
+);
+
 has 'uniqueid' => (
     is => 'ro',
 );
@@ -126,6 +131,10 @@ sub name($self) {
     $self->person->[0]->{realName}->[0];
 };
 
+sub _build_id($self) {
+    $self->{uniqueid}->[0];
+};
+
 sub _build_numbers($self) {
     my $t = $self->telephony;
     [map { Net::Fritz::PhonebookEntry::Number->new( entry => $self, %$_ ) } @{ $t->[0]->{number} }];
@@ -142,7 +151,7 @@ sub create( $self, %options ) {
 sub delete( $self, %options ) {
     $self->service->call('DeletePhonebookEntry',
         NewPhonebookID => $self->phonebook->id,
-        NewPhonebookEntryID => $self->uniqueid
+        NewPhonebookEntryID => $self->id
     )->data
 }
 
@@ -150,7 +159,7 @@ sub save( $self ) {
     my $payload = $self->build_structure;
     $self->service->call('DeletePhonebookEntry',
         NewPhonebookID => $self->phonebook->id,
-        NewPhonebookEntryID => $self->uniqueid,
+        NewPhonebookEntryID => $self->id,
         NewPhonebookEntryData => $payload,
     )->data
 }
