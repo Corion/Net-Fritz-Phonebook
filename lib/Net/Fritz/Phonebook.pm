@@ -117,6 +117,10 @@ has 'telephony' => (
     is => 'ro',
 );
 
+#has 'services' => (
+#    is => 'ro',
+#);
+
 has 'category' => (
     is => 'ro',
 );
@@ -126,6 +130,10 @@ has 'numbers' => (
     builder => 1,
     lazy => 1,
 );
+
+sub services( $self ) {
+    $self->telephony->[0]->{services}
+}
 
 sub name($self) {
     $self->person->[0]->{realName}->[0];
@@ -164,6 +172,24 @@ sub save( $self ) {
     )->data
 }
 
+sub build_structure( $self ) {
+    return {
+        person => [
+            { realName => [$self->name] },
+        ],
+        telephony => [{ number => 
+            [map { $_->build_structure } @{ $self->numbers }],
+            services => $self->services,
+        }],
+        category => [
+            $self->type,
+        ],
+        uniqueid => [
+            $self->id
+        ],
+    };
+}
+
 package Net::Fritz::PhonebookEntry::Number;
 use strict;
 use Moo 2;
@@ -188,6 +214,18 @@ has 'person' => (
     is => 'ro',
 );
 
+has 'quickdial' => (
+    is => 'ro',
+);
+
+has 'vanity' => (
+    is => 'ro',
+);
+
+has 'prio' => (
+    is => 'ro',
+);
+
 =head2 C<< type >>
 
   home
@@ -209,10 +247,15 @@ sub number($self) {
     $self->content
 };
 
-#sub GetPhonebookList($self) {
-#    my ($self) = @_;
-#    $self->service->call('GetPhonebookList');
-#}
+sub build_structure( $self ) {
+    return {
+        type => $self->type,
+        content => $self->content,
+        quickdial => $self->quickdial,
+        vanity => $self->vanity,
+        prio => $self->prio,
+    }
+}
 
 1;
 
