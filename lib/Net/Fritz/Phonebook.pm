@@ -5,6 +5,9 @@ use Filter::signatures;
 use feature 'signatures';
 no warnings 'experimental::signatures';
 
+use vars '$VERSION';
+$VERSION = '0.01';
+
 use Data::Dumper;
 
 =head1 NAME
@@ -89,6 +92,9 @@ use Filter::signatures;
 use feature 'signatures';
 no warnings 'experimental::signatures';
 
+use vars '$VERSION';
+$VERSION = '0.01';
+
 use Data::Dumper;
 has 'phonebook' => (
     is => 'ro',
@@ -157,9 +163,9 @@ use feature 'signatures';
 no warnings 'experimental::signatures';
 
 use Data::Dumper;
-#has 'phonebook' => (
-#    is => 'ro',
-#);
+
+use vars '$VERSION';
+$VERSION = '0.01';
 
 has entry => (
     is => 'ro',
