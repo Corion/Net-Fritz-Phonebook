@@ -14,7 +14,8 @@ Net::Fritz::PhoneBook - update the Fritz!Box phonebook from Perl
 =head1 SYNOPSIS
 
 This module uses the API exposed by the Fritz!Box via TR064 to read, create and
-update contacts in a phone book.
+update contacts in a phone book. This uses the C<X_AVM-DE_OnTel> service, which
+is specific to the AVM Fritz!Box line of products.
 
 =cut
 
@@ -37,7 +38,6 @@ has 'metadata' => (
     is => 'lazy',
     default => sub($self) {
         my $res = $self->service->call('GetPhonebook', NewPhonebookID => $self->id )->data;
-        #print Dumper $res;
         $res
     },
 );
