@@ -36,8 +36,10 @@ for my $service (@{ $services->data }) {
             service => $service,
             id => $bookid,
         );
+        print Dumper $book->content;
         print $book->name, "\n";
         for my $e (@{ $book->entries }) {
+            delete $e->{phonebook};
             warn Dumper $e;
             print join "\t", $e->name, $e->type, (map { $_->type, $_->number } @{ $e->numbers }), "\n";
         };
