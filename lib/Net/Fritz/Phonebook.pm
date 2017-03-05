@@ -123,21 +123,24 @@ has 'name' => (
 );
 
 around BUILDARGS => sub ( $orig, $class, %args ) {
-    my $telephony = $args{ telephony }->[0];
-    my %self = (
-        phonebook => $args{ phonebook },
-        name => $args{ person }->[0]->{realName}->[0],
-        uniqueid => $args{uniqueid}->[0],
-        #services => $telephony->{services},
-        category => $args{category}->[0],
-        numbers => [map { Net::Fritz::PhonebookEntry::Number->new( %$_ ) }
-                       @{ $telephony->{number} }
-                   ],
-        email_addresses => [map { Net::Fritz::PhonebookEntry::Mail->new( %$_ ) }
-                       @{ $telephony->{services} }
-                   ],
-    );
-    
+    my %self;
+    if( $args{ phonebook }) {
+        my $telephony = $args{ telephony }->[0];
+        %self = (
+            phonebook => $args{ phonebook },
+            name     => $args{ person }->[0]->{realName}->[0],
+            uniqueid => $args{uniqueid}->[0],
+            category => $args{category}->[0],
+            numbers => [map { Net::Fritz::PhonebookEntry::Number->new( %$_ ) }
+                           @{ $telephony->{number} }
+                       ],
+            email_addresses => [map { Net::Fritz::PhonebookEntry::Mail->new( %$_ ) }
+                           @{ $telephony->{services} }
+                       ],
+        );
+    } else {
+        %self = %args;
+    };
     return $class->$orig( %self );
 };
 
