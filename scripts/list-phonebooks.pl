@@ -42,15 +42,6 @@ for my $service (@{ $services->data }) {
             delete $e->{phonebook};
             print join "\t", $e->name, $e->category, (map { $_->type, $_->content } @{ $e->numbers }), "\n";
         };
-        
-        if( 'Testtelefonbuch' eq $book->name ) {
-            my $e = Net::Fritz::PhonebookEntry->new(
-                name => 'Test Tester',
-            );
-            $e->add_number('555-123456');
-            my $res = $book->add_entry($e);
-            die $res->error if $res->error;
-        };
     };
     
 };

@@ -5,6 +5,8 @@ use Filter::signatures;
 use feature 'signatures';
 no warnings 'experimental::signatures';
 
+use XML::Simple; # because that's what Net::Fritz uses...
+
 use vars '$VERSION';
 $VERSION = '0.01';
 
@@ -63,6 +65,7 @@ has 'content' => (
     is => 'lazy',
     default => sub($self) {
         my $res = $self->service->fritz->_ua->get($self->url);
+        #warn $res->content;
         $self->_xs->parse_string( $res->content );
     },
 );
@@ -82,16 +85,18 @@ sub delete( $self, %options ) {
 
 sub _build_entries( $self, %options ) {
     my $c = $self->content;
-    [map { Net::Fritz::PhonebookEntry->new( phonebook => $self, %$_ ) } @{ $self->content->{phonebook}->[0]->{contact} }];
+    [map { Net::Fritz::PhonebookEntry->new( phonebook => $self, contact => [$_] ) } @{ $self->content->{phonebook}->[0]->{contact} }];
 }
 
 sub add_entry( $self, $entry ) {
     my $s = $entry->build_structure;
-    warn Dumper $s;
+
+    my $xml = XMLout({ contact => [$s]});
+
     my $res = $self->service->call('SetPhonebookEntry',
         NewPhonebookID => $self->id,
         NewPhonebookEntryID => '', # new entry
-        NewPhonebookEntryData => $s,
+        NewPhonebookEntryData => $xml,
     );
 };
 
@@ -136,13 +141,14 @@ has 'name' => (
 
 around BUILDARGS => sub ( $orig, $class, %args ) {
     my %self;
-    if( exists $args{ telephony }) {
-        my $telephony = $args{ telephony }->[0];
+    if( exists $args{ contact }) {
+        my $contact = $args{ contact }->[0];
+        my $telephony = $contact->{telephony}->[0];
         %self = (
             phonebook => $args{ phonebook },
-            name     => $args{ person }->[0]->{realName}->[0],
-            uniqueid => $args{uniqueid}->[0],
-            category => $args{category}->[0],
+            name     => $contact->{ person }->[0]->{realName}->[0],
+            uniqueid => $contact->{uniqueid}->[0],
+            category => $contact->{category}->[0],
             numbers => [map { Net::Fritz::PhonebookEntry::Number->new( %$_ ) }
                            @{ $telephony->{number} }
                        ],
@@ -162,19 +168,17 @@ sub build_structure( $self ) {
     if( defined $self->uniqueid ) {
         @uniqueid = (uniqueid => [$self->uniqueid] );
     };
-    return {
-        person => [
-            { realName => [$self->name] },
-        ],
-        telephony => [{
-            number => 
-                [map { $_->build_structure } @{ $self->numbers }],
-            services => 
-                [map { $_->build_structure } @{ $self->email_addresses }],
+
+    my $res = {
+        person => [{
+            realName => [$self->name],
         }],
-        category => [
-            $self->category,
-        ],
+        telephony => [{
+                number => [map { $_->build_structure } @{ $self->numbers }],
+                services =>
+                    [map { $_->build_structure } @{ $self->email_addresses }],
+        }],
+        category => [$self->category],
         @uniqueid,
     };
 }
@@ -263,6 +267,8 @@ has 'prio' => (
   work
   fax_work
 
+All other strings get displayed as "Sonstige" but get preserved.
+  
 =cut
 
 has 'type' => (
