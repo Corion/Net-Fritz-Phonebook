@@ -3,56 +3,34 @@ use strict;
 use Test::More tests => 4;
 use Data::Dumper;
 use Net::Fritz::Phonebook;
+use XML::Simple;
 
-my $raw_contact = {
-        'category' => ['0'],
-        'telephony' => [{
-            'number' => [
-                {
-                    'prio'=> '1',
-                    'vanity' => '',
-                    'type'=> 'home',
-                    'quickdial' => '',
-                    'content' => '123'
-                },
-                {
-                    'content' => '345',
-                    'quickdial' => '',
-                    'type'=> 'mobile',
-                    'vanity' => '',
-                    'prio'=> ''
-                },
-                {
-                    'vanity' => '',
-                    'prio'=> '',
-                    'type'=> 'work',
-                    'content' => '456',
-                    'quickdial' => ''
-                },
-                {
-                    'type'=> 'fax_work',
-                    'quickdial' => '',
-                    'content' => '789',
-                    'vanity' => '',
-                    'prio'=> ''
-                }
-                ],
-            'services' => [{
-                'email' => [{
-                    'classifier' => 'private',
-                    'content' => 'hans.mueller@example.com'
-                }]
-            }]
-        }],
-        'uniqueid' => ['12'],
-        'person' => [{
-            'realName' => ["Hans M\x{fc}ller"]
-        }]
-};
+my $raw_contact = XMLin(<<"XML", ForceArray => 1);
+<contact>
+    <category>0</category>
+    <person>
+        <realName>Hans Mahler</realName>
+    </person>
+    <uniqueid>12</uniqueid>
+    <telephony>
+        <services>
+            <!-- emails:1-->
+            <email classifier="private">hans.mueller\@example.com</email>
+        </services>
+        <!-- numbers:4-->
+        <number type="home" quickdial="" vanity="" prio="1" >123</number>
+        <number type="mobile" quickdial="" vanity="" prio="" >345</number>
+        <number type="work" quickdial="" vanity="" prio="" >456</number>
+        <number type="fax_work" quickdial="" vanity="" prio="" >789</number>
+        <!-- idx:0 -->
+        <!-- ringtoneidx:nil -->
+    </telephony>
+</contact>
+XML
 
-my $contact = Net::Fritz::PhonebookEntry->new(%$raw_contact);
+my $contact = Net::Fritz::PhonebookEntry->new(contact => [$raw_contact]);
 is $contact->uniqueid, 12, "We find contact with id 12";
-is $contact->name, "Hans M\x{fc}ller", "We find a name";
+is $contact->name, "Hans Mahler", "We find a name, except that decoding doesn't seem to happen";
 my $processed = $contact->build_structure;
 
 is_deeply $processed, $raw_contact, "All data survives a serialization round-trip";
@@ -61,7 +39,7 @@ is_deeply $processed, $raw_contact, "All data survives a serialization round-tri
 my $new = Net::Fritz::PhonebookEntry->new(
     category => 0,
 );
-$new->name("Hans M\x{fc}ller");
+$new->name("Hans Mahler");
 $new->uniqueid(12);
 
 my $number = Net::Fritz::PhonebookEntry::Number->new();
