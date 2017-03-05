@@ -98,58 +98,82 @@ $VERSION = '0.01';
 use Data::Dumper;
 has 'phonebook' => (
     is => 'ro',
-);
-
-has 'id' => (
-    is => 'lazy',
-    builder => 1,
+    weak_ref => 1,
 );
 
 has 'uniqueid' => (
-    is => 'ro',
+    is => 'rw',
 );
-
-has 'person' => (
-    is => 'ro',
-);
-
-has 'telephony' => (
-    is => 'ro',
-);
-
-#has 'services' => (
-#    is => 'ro',
-#);
 
 has 'category' => (
-    is => 'ro',
+    is => 'rw',
+    default => 0,
 );
 
 has 'numbers' => (
-    is => 'ro',
-    builder => 1,
-    lazy => 1,
+    is => 'rw',
 );
 
-sub services( $self ) {
-    $self->telephony->[0]->{services}
+has 'email_addresses' => (
+    is => 'rw',
+);
+
+has 'name' => (
+    is => 'rw',
+);
+
+around BUILDARGS => sub ( $orig, $class, %args ) {
+    my $telephony = $args{ telephony }->[0];
+    my %self = (
+        phonebook => $args{ phonebook },
+        name => $args{ person }->[0]->{realName}->[0],
+        uniqueid => $args{uniqueid}->[0],
+        #services => $telephony->{services},
+        category => $args{category}->[0],
+        numbers => [map { Net::Fritz::PhonebookEntry::Number->new( %$_ ) }
+                       @{ $telephony->{number} }
+                   ],
+        email_addresses => [map { Net::Fritz::PhonebookEntry::Mail->new( %$_ ) }
+                       @{ $telephony->{services} }
+                   ],
+    );
+    
+    return $class->$orig( %self );
+};
+
+# This is the reverse of BUILDARGS, basically
+sub build_structure( $self ) {
+    return {
+        person => [
+            { realName => [$self->name] },
+        ],
+        telephony => [{
+            number => 
+                [map { $_->build_structure } @{ $self->numbers }],
+            services => 
+                [map { $_->build_structure } @{ $self->email_addresses }],
+        }],
+        category => [
+            $self->category,
+        ],
+        uniqueid => [
+            $self->uniqueid
+        ],
+    };
 }
 
-sub name($self) {
-    $self->person->[0]->{realName}->[0];
+sub add_number($self, $n, $type='home') {
+    if( ! ref $n) {
+        $n = Net::Fritz::PhonebookEntry::Number->new( content => $n, type => $type );
+    };
+    push @{$self->numbers}, $n;
 };
 
-sub _build_id($self) {
-    $self->{uniqueid}->[0];
-};
-
-sub _build_numbers($self) {
-    my $t = $self->telephony;
-    [map { Net::Fritz::PhonebookEntry::Number->new( entry => $self, %$_ ) } @{ $t->[0]->{number} }];
-};
-
-sub type( $self ) {
-    @{ $self->category };
+sub add_email($self, $m) {
+    if( ! ref $m) {
+        $m = Net::Fritz::PhonebookEntry::Mail->new( email => [{ content => $m }]);
+    };
+    push @{$self->email_addresses}, $m;
 };
 
 sub create( $self, %options ) {
@@ -172,23 +196,6 @@ sub save( $self ) {
     )->data
 }
 
-sub build_structure( $self ) {
-    return {
-        person => [
-            { realName => [$self->name] },
-        ],
-        telephony => [{ number => 
-            [map { $_->build_structure } @{ $self->numbers }],
-            services => $self->services,
-        }],
-        category => [
-            $self->type,
-        ],
-        uniqueid => [
-            $self->id
-        ],
-    };
-}
 
 package Net::Fritz::PhonebookEntry::Number;
 use strict;
@@ -204,6 +211,7 @@ $VERSION = '0.01';
 
 has entry => (
     is => 'ro',
+    weak_ref => 1,
 );
 
 has 'uniqueid' => (
@@ -216,14 +224,17 @@ has 'person' => (
 
 has 'quickdial' => (
     is => 'ro',
+    default => '',
 );
 
 has 'vanity' => (
     is => 'ro',
+    default => '',
 );
 
 has 'prio' => (
-    is => 'ro',
+    is => 'rw',
+    default => '',
 );
 
 =head2 C<< type >>
@@ -236,24 +247,65 @@ has 'prio' => (
 =cut
 
 has 'type' => (
-    is => 'ro',
+    is => 'rw',
+    default => 'home',
 );
 
 has 'content' => (
-    is => 'ro',
+    is => 'rw',
 );
 
-sub number($self) {
-    $self->content
+sub build_structure( $self ) {
+    return {
+        type      => $self->type,
+        content   => $self->content,
+        quickdial => $self->quickdial,
+        vanity    => $self->vanity,
+        prio      => $self->prio,
+    }
+}
+
+package Net::Fritz::PhonebookEntry::Mail;
+use strict;
+use Moo 2;
+use Filter::signatures;
+use feature 'signatures';
+no warnings 'experimental::signatures';
+
+use Data::Dumper;
+
+use vars '$VERSION';
+$VERSION = '0.01';
+
+has entry => (
+    is => 'ro',
+    weak_ref => 1,
+);
+
+has 'classifier' => (
+    is => 'rw',
+    default => 'private',
+);
+
+has 'content' => (
+    is => 'rw',
+);
+
+around BUILDARGS => sub( $orig, $class, %args ) {
+    my %self = (
+        exists $args{ email }->[0]->{classifier}
+        ? (classifier => $args{ email }->[0]->{classifier}) : (),
+        content    => $args{ email }->[0]->{content},
+    );
+    $class->$orig( %self );
 };
 
 sub build_structure( $self ) {
     return {
-        type => $self->type,
-        content => $self->content,
-        quickdial => $self->quickdial,
-        vanity => $self->vanity,
-        prio => $self->prio,
+        email => [{
+            classifier => $self->classifier,
+            content => $self->content,
+        }],
     }
 }
 
