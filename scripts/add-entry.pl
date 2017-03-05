@@ -79,7 +79,7 @@ my $contact = Net::Fritz::PhonebookEntry->new(
     name => 'Test Tester',
 );
 $contact->add_number('555-123455');
-$contact->add_number('555-123456','fax');
-#$contact->name('Test Tester');
+$contact->add_number('555-123456','fax_work'); # displayed as "fax"
+$contact->add_number('555-123457','fax'); # "fax" gets preserved but displayed as "Sonstige"
 my $res = $book->add_entry($contact);
 die $res->error if $res->error;
