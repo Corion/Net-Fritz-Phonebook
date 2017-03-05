@@ -85,6 +85,16 @@ sub _build_entries( $self, %options ) {
     [map { Net::Fritz::PhonebookEntry->new( phonebook => $self, %$_ ) } @{ $self->content->{phonebook}->[0]->{contact} }];
 }
 
+sub add_entry( $self, $entry ) {
+    my $s  =$entry->build_structure;
+    warn Dumper $s;
+    my $res = $self->service->call('SetPhonebookEntry',
+        NewPhonebookID => $self->id,
+        NewPhonebookEntryID => '', # new entry
+        NewPhonebookEntryData => $s,
+    );
+};
+
 package Net::Fritz::PhonebookEntry;
 use strict;
 use Moo 2;
