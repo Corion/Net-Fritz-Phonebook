@@ -36,12 +36,20 @@ for my $service (@{ $services->data }) {
             service => $service,
             id => $bookid,
         );
-        print Dumper $book->content;
+        #print Dumper $book->content;
         print $book->name, "\n";
         for my $e (@{ $book->entries }) {
             delete $e->{phonebook};
-            warn Dumper $e;
-            print join "\t", $e->name, $e->type, (map { $_->type, $_->number } @{ $e->numbers }), "\n";
+            print join "\t", $e->name, $e->category, (map { $_->type, $_->content } @{ $e->numbers }), "\n";
+        };
+        
+        if( 'Testtelefonbuch' eq $book->name ) {
+            my $e = Net::Fritz::PhonebookEntry->new(
+                name => 'Test Tester',
+            );
+            $e->add_number('555-123456');
+            my $res = $book->add_entry($e);
+            die $res->error if $res->error;
         };
     };
     
