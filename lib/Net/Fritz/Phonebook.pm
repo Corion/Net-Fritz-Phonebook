@@ -143,6 +143,10 @@ around BUILDARGS => sub ( $orig, $class, %args ) {
 
 # This is the reverse of BUILDARGS, basically
 sub build_structure( $self ) {
+    my @uniqueid;
+    if( defined $self->uniqueid ) {
+        @uniqueid = (uniqueid => $self->uniqueid );
+    };
     return {
         person => [
             { realName => [$self->name] },
@@ -156,9 +160,7 @@ sub build_structure( $self ) {
         category => [
             $self->category,
         ],
-        uniqueid => [
-            $self->uniqueid
-        ],
+        @uniqueid,
     };
 }
 
