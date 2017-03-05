@@ -59,7 +59,7 @@ is_deeply $processed, $raw_contact, "All data survives a serialization round-tri
 
 # Now, create an entry from scratch and see whether it still matches:
 my $new = Net::Fritz::PhonebookEntry->new(
-    category => [0],
+    category => 0,
 );
 $new->name("Hans M\x{fc}ller");
 $new->uniqueid(12);

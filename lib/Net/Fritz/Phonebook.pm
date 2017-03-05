@@ -86,7 +86,7 @@ sub _build_entries( $self, %options ) {
 }
 
 sub add_entry( $self, $entry ) {
-    my $s  =$entry->build_structure;
+    my $s = $entry->build_structure;
     warn Dumper $s;
     my $res = $self->service->call('SetPhonebookEntry',
         NewPhonebookID => $self->id,
@@ -136,7 +136,7 @@ has 'name' => (
 
 around BUILDARGS => sub ( $orig, $class, %args ) {
     my %self;
-    if( $args{ phonebook }) {
+    if( exists $args{ telephony }) {
         my $telephony = $args{ telephony }->[0];
         %self = (
             phonebook => $args{ phonebook },
@@ -160,7 +160,7 @@ around BUILDARGS => sub ( $orig, $class, %args ) {
 sub build_structure( $self ) {
     my @uniqueid;
     if( defined $self->uniqueid ) {
-        @uniqueid = (uniqueid => $self->uniqueid );
+        @uniqueid = (uniqueid => [$self->uniqueid] );
     };
     return {
         person => [
@@ -194,7 +194,9 @@ sub add_email($self, $m) {
 };
 
 sub create( $self, %options ) {
-    $self->service->call('AddPhonebookEntry')->data
+    $self->service->call('AddPhonebookEntry',
+        NewPhonebookID => $self->phonebook->id,
+    )->data
 }
 
 sub delete( $self, %options ) {
@@ -206,7 +208,7 @@ sub delete( $self, %options ) {
 
 sub save( $self ) {
     my $payload = $self->build_structure;
-    $self->service->call('DeletePhonebookEntry',
+    $self->service->call('AddPhonebookEntry',
         NewPhonebookID => $self->phonebook->id,
         NewPhonebookEntryID => $self->id,
         NewPhonebookEntryData => $payload,
