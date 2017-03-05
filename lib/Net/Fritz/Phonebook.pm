@@ -112,10 +112,12 @@ has 'category' => (
 
 has 'numbers' => (
     is => 'rw',
+    default => sub{ [] },
 );
 
 has 'email_addresses' => (
     is => 'rw',
+    default => sub{ [] },
 );
 
 has 'name' => (
