@@ -27,28 +27,37 @@ if( my $error = $device->error ) {
 };
 
 my $services = $device->find_service_names(qr/X_AVM-DE_OnTel/);
-    
-my $book = Net::Fritz::Phonebook->new(
-    service => $services->data->[0],
-    id => 1,
-);
+my $service = $services->data->[0];
+
+my @phonebooks = Net::Fritz::Phonebook->list($service);
+
+(my $book) = grep { $phonebookname eq $_->name }
+               @phonebooks;
+
+if( ! $book) {
+    warn "Couldn't find phone book '$phonebookname'\n";
+    warn "Known phonebooks on $host are\n";
+    warn $_->name . "\n"
+        for @phonebooks;
+    exit 1;
+};
 
 # Cache what we have so we don't overwrite contacts with identical data.
 my $entries = $book->entries;
 
 sub entry_exists {
     my( $entry ) = @_;
-    
+
     #my $uid = $vcard->uid;
     #warn sprintf "[%s] (%s)\n", $uid, $vcard->VFN;
 
     # check uid
     # grep { $uid eq $_->uniqueid } @$entries;
-    
+
     my %numbers = map {
         $_->content => 1,
-    } $entry->numbers;
-    
+    } @{ $entry->numbers };
+
     # check name or number
     # This means we cannot rename?!
     grep {
@@ -58,12 +67,28 @@ sub entry_exists {
     } @$entries;
 };
 
+sub entry_is_different {
+    my( $entry, $match ) = @_;
+
+    my %numbers = map {
+        $_->content => 1,
+    } @{ $entry->numbers };
+
+    #my %match_numbers = map {
+    #    $_->content => 1,
+    #} @{ $match->numbers };
+
+    # check name or number
+    # If one of the two is a mismatch, we are different
+    #$match->name ne $entry->name
+    #    or grep { $numbers{ $_->content } } @{ $c->numbers }
+    #} @$entries;
+};
+
 sub add_contact {
     my( $vcard ) = @_;
-    #print join " - ", $addr->VFN, (map {ref $_ ? $_->{value}: ()} $addr->VNickname), (map { $_->{value}} $addr->VEmails);
-    #my $name = decode( 'Latin-1', $vcard->VFN );
     my $name = encode('Latin-1', $vcard->VFN);
-        
+
     $name =~ s!\x{fffd}!!g;
     #$Data::Dumper::Useqq = 1;
     #warn Dumper \$name;
@@ -72,11 +97,11 @@ sub add_contact {
         # I need a better unifier - the uniqueid gets assigned by the fb
         #uniqueid => $vcard->uid,
     );
-    
+
     for my $number ($vcard->VPhones) {
         $contact->add_number($number->{value}, $number->{type});
     };
-    
+
     if( 0+@{ $contact->numbers } and ! entry_exists( $contact )) {
         my $res = $book->add_entry($contact);
         die $res->error if $res->error;
@@ -101,7 +126,7 @@ for my $url (@ARGV) {
     for my $cal (@{ $CardDAV->GetAddressBooks() }) {
         print sprintf "%s (%s)\n", $cal->{name}, $cal->{path};
         #print Dumper $cal;
-        
+
         if( $cal->{path} eq 'addresses' ) {
             #$Data::Dumper::Useqq = 1;
             my( $cards ) = $CardDAV->GetContacts( $cal->{path} );
