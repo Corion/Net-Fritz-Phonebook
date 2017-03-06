@@ -7,6 +7,15 @@ use URI::URL;
 use Data::Dumper;
 use Encode;
 
+use vars '$VERSION';
+$VERSION = '0.01';
+
+=head1 NAME
+
+import-carddav.pl - import a CardDAV phone book
+
+=cut
+
 use Getopt::Long;
 GetOptions(
     'h|host:s' => \my $host,
