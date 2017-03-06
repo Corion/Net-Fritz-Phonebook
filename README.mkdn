@@ -1,12 +1,85 @@
 # NAME
 
-Net::Fritz::PhoneBook - update the Fritz!Box phonebook from Perl
+Net::Fritz::Phonebook - manage the Fritz!Box phonebook from Perl
 
 # SYNOPSIS
+
+    my $fb = Net::Fritz::Box->new(
+        username => $username,
+        password => $password,
+        upnp_url => $host,
+    );
+    my $device = $fb->discover;
+    if( my $error = $device->error ) {
+        die $error
+    };
+    my $services = $device->find_service_names(qr/X_AVM-DE_OnTel/);
+    my $service = $services->data->[0];
+
+    my @phonebooks = Net::Fritz::Phonebook->list($service);
 
 This module uses the API exposed by the Fritz!Box via TR064 to read, create and
 update contacts in a phone book. This uses the `X_AVM-DE_OnTel` service, which
 is specific to the AVM Fritz!Box line of products.
+
+# ACCESSORS
+
+## `id`
+
+    print $phonebook->id;
+
+The ID of the phone book on the Fritz!Box
+
+## `name`
+
+    print $phonebook->name;
+
+The user visible name of the phone book on the Fritz!Box
+
+## `url`
+
+    print $phonebook->url;
+
+The URL of the phone book on the Fritz!Box
+
+This URL is used to access the phone book contents.
+
+## `entries`
+
+    for my $entry ( @{ $phonebook->entries }) {
+        print $entry->name
+    };
+
+Arrayref of the entries in this phone book. Each entry is
+a [Net::Fritz::Phonebook::Entry](https://metacpan.org/pod/Net::Fritz::Phonebook::Entry).
+
+# METHODS
+
+## `$phonebook->create`
+
+    $phonebook->create();
+
+Creates the phone book on the FritzBox. Entries of this phone book are not
+saved.
+
+## `$phonebook->delete`
+
+    $phonebook->delete();
+
+Deletes the phone book on the FritzBox. All entries of this phone book are also
+deleted with the phone book.
+
+## `$phonebook->add_entry`
+
+    $phonebook->add_entry( $new_contact );
+
+Saves an entry in the phone book on the FritzBox.
+
+## `Net::Fritz::Phonebook->list( $service )`
+
+    my $device = $fb->discover;
+    my $services = $device->find_service_names(qr/X_AVM-DE_OnTel/);
+    my @phonebooks = Net::Fritz::Phonebook->list( $services->data->[0] );
 
 ## `type`
 
@@ -14,6 +87,8 @@ is specific to the AVM Fritz!Box line of products.
     mobile
     work
     fax_work
+
+All other strings get displayed as "Sonstige" but get preserved.
 
 # SEE ALSO
 
