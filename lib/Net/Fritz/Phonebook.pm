@@ -65,8 +65,7 @@ has 'content' => (
     is => 'lazy',
     default => sub($self) {
         my $res = $self->service->fritz->_ua->get($self->url);
-        #warn $res->content;
-        $self->_xs->parse_string( $res->content );
+        $self->_xs->parse_string( $res->decoded_content );
     },
 );
 
