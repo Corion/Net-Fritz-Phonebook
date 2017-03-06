@@ -2,7 +2,7 @@
 use strict;
 use Test::More tests => 4;
 use Data::Dumper;
-use Net::Fritz::Phonebook;
+use Net::Fritz::PhonebookEntry;
 use XML::Simple;
 
 my $raw_contact = XMLin(<<"XML", ForceArray => 1);

@@ -81,15 +81,34 @@ Saves an entry in the phone book on the FritzBox.
     my $services = $device->find_service_names(qr/X_AVM-DE_OnTel/);
     my @phonebooks = Net::Fritz::Phonebook->list( $services->data->[0] );
 
-## `type`
-
-    home
-    mobile
-    work
-    fax_work
-
-All other strings get displayed as "Sonstige" but get preserved.
-
 # SEE ALSO
 
 [https://avm.de/fileadmin/user\_upload/Global/Service/Schnittstellen/X\_contactSCPD.pdf](https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/X_contactSCPD.pdf)
+
+# REPOSITORY
+
+The public repository of this module is
+[http://github.com/Corion/Net-Fritz-Phonebook](http://github.com/Corion/Net-Fritz-Phonebook).
+
+# SUPPORT
+
+The public support forum of this module is
+[https://perlmonks.org/](https://perlmonks.org/).
+
+# BUG TRACKER
+
+Please report bugs in this module via the RT CPAN bug queue at
+[https://rt.cpan.org/Public/Dist/Display.html?Name=Net-Fritz-Phonebook](https://rt.cpan.org/Public/Dist/Display.html?Name=Net-Fritz-Phonebook)
+or via mail to [net-fritz-phonebook-Bugs@rt.cpan.org](https://metacpan.org/pod/net-fritz-phonebook-Bugs@rt.cpan.org).
+
+# AUTHOR
+
+Max Maischein `corion@cpan.org`
+
+# COPYRIGHT (c)
+
+Copyright 2017 by Max Maischein `corion@cpan.org`.
+
+# LICENSE
+
+This module is released under the same terms as Perl itself.
