@@ -139,6 +139,11 @@ has 'name' => (
     is => 'rw',
 );
 
+has 'ringtoneidx' => (
+    is => 'rw',
+    #default => '',
+);
+
 around BUILDARGS => sub ( $orig, $class, %args ) {
     my %self;
     if( exists $args{ contact }) {
@@ -169,6 +174,10 @@ sub build_structure( $self ) {
         @uniqueid = (uniqueid => [$self->uniqueid] );
     };
 
+    my @ringtoneidx;
+    if( defined $self->ringtoneidx ) {
+        @ringtoneidx = (ringtoneidx => [$self->ringtoneidx] );
+    };
     my $res = {
         person => [{
             realName => [$self->name],
@@ -178,6 +187,7 @@ sub build_structure( $self ) {
                 services =>
                     [map { $_->build_structure } @{ $self->email_addresses }],
         }],
+        @ringtoneidx,
         category => [$self->category],
         @uniqueid,
     };
