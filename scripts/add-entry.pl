@@ -29,52 +29,6 @@ my $book = Net::Fritz::Phonebook->new(
 );
 #print $book->name, "\n";
         
-my $raw_contact = {
-        'category' => ['0'],
-        'telephony' => [{
-            'number' => [
-                {
-                    'prio'=> '1',
-                    'vanity' => '',
-                    'type'=> 'home',
-                    'quickdial' => '',
-                    'content' => '123'
-                },
-                {
-                    'content' => '345',
-                    'quickdial' => '',
-                    'type'=> 'mobile',
-                    'vanity' => '',
-                    'prio'=> ''
-                },
-                {
-                    'vanity' => '',
-                    'prio'=> '',
-                    'type'=> 'work',
-                    'content' => '456',
-                    'quickdial' => ''
-                },
-                {
-                    'type'=> 'fax_work',
-                    'quickdial' => '',
-                    'content' => '789',
-                    'vanity' => '',
-                    'prio'=> ''
-                }
-                ],
-            'services' => [{
-                'email' => [{
-                    'classifier' => 'private',
-                    'content' => 'hans.mueller@example.com'
-                }]
-            }]
-        }],
-        'uniqueid' => ['12'],
-        'person' => [{
-            'realName' => ["Hans M\x{fc}ller"]
-        }]
-};
-
 my $contact = Net::Fritz::PhonebookEntry->new(
     name => 'Test Tester',
 );
