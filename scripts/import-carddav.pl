@@ -35,7 +35,6 @@ my $book = Net::Fritz::Phonebook->new(
 
 # Cache what we have so we don't overwrite contacts with identical data.
 my $entries = $book->entries;
-print $_->uniqueid,"\n" for @$entries;
 
 sub entry_exists {
     my( $entry ) = @_;
@@ -46,14 +45,17 @@ sub entry_exists {
     # check uid
     # grep { $uid eq $_->uniqueid } @$entries;
     
-    # check name
+    my %numbers = map {
+        $_->content => 1,
+    } $entry->numbers;
+    
+    # check name or number
+    # This means we cannot rename?!
     grep {
-            $_->name eq $entry->name
+        my $c = $_;
+            $c->name eq $entry->name
+         or grep { $numbers{ $_->content } } @{ $c->numbers }
     } @$entries;
-    
-    # check number
-    
-    #0
 };
 
 sub add_contact {
