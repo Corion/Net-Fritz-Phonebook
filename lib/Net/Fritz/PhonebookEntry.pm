@@ -98,6 +98,20 @@ has 'ringtoneidx' => (
     #default => '',
 );
 
+=head2 C< imageURL >
+
+HTTP URL to image for this contact
+
+This must be on the same protocol and host as the Fritz!Box device
+the phone book resides on!
+
+=cut
+
+has 'imageURL' => (
+    is => 'rw',
+    #default => '',
+);
+
 around BUILDARGS => sub ( $orig, $class, %args ) {
     my %self;
     if( exists $args{ contact }) {
@@ -108,6 +122,7 @@ around BUILDARGS => sub ( $orig, $class, %args ) {
             name     => $contact->{ person }->[0]->{realName}->[0],
             uniqueid => $contact->{uniqueid}->[0],
             category => $contact->{category}->[0],
+            imageURL => $contact->{imageURL}->[0],
             numbers => [map { Net::Fritz::PhonebookEntry::Number->new( %$_ ) }
                            @{ $telephony->{number} }
                        ],
@@ -134,13 +149,12 @@ the appropriate XML to write a contact.
 # This is the reverse of BUILDARGS, basically
 sub build_structure( $self ) {
     my %optional_fields;
-    if( defined $self->uniqueid ) {
-        $optional_fields{ uniqueid } = [$self->uniqueid];
+    for my $field (qw(uniqueid ringtoneidx imageURL)) {
+        if( defined $self->$field ) {
+            $optional_fields{ $field } = [$self->$field];
+        };
     };
 
-    if( defined $self->ringtoneidx ) {
-        $optional_fields{ ringtoneidx } [$self->ringtoneidx] ;
-    };
     my $res = {
         person => [{
             realName => [$self->name],
