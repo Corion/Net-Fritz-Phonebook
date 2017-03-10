@@ -6,6 +6,7 @@ use feature 'signatures';
 no warnings 'experimental::signatures';
 
 use XML::Simple; # because that's what Net::Fritz uses...
+use Net::Fritz::PhonebookEntry;
 
 use vars '$VERSION';
 $VERSION = '0.01';
