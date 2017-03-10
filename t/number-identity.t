@@ -5,7 +5,7 @@ use Data::Dumper;
 use Net::Fritz::PhonebookEntry;
 use XML::Simple;
 
-my $raw_contact = XMLin(<<"XML", ForceArray => 1);
+my $raw_contact_xml = <<"XML", ForceArray => 1;
 <contact>
     <category>0</category>
     <person>
@@ -27,6 +27,7 @@ my $raw_contact = XMLin(<<"XML", ForceArray => 1);
     </telephony>
 </contact>
 XML
+my $raw_contact = XMLin($raw_contact_xml, ForceArray => 1);
 
 my $contact = Net::Fritz::PhonebookEntry->new(contact => [$raw_contact]);
 is $contact->uniqueid, 12, "We find contact with id 12";
@@ -54,4 +55,7 @@ $new->add_email('hans.mueller@example.com');
 
 $processed = $new->build_structure;
 is_deeply $processed, $raw_contact, "Fresh creation is identical to canned data"
-    or diag Dumper $processed;
+    or diag Dumper [$processed,$raw_contact];
+
+#my $out = XMLout({ contact => [$processed]});
+#is $out, $raw_contact_xml, "We recreate the same-ish XML again";
