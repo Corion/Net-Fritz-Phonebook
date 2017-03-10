@@ -159,31 +159,44 @@ sub add_contact {
     };
 }
 
-for my $url (@ARGV) {
-    $url = URI::URL->new( $url );
+for my $item (@ARGV) {
+    my @contacts;
+    if( -f $item ) {
+        require Net::CardDAVTalk::VCard;
+        my $vcard = Net::CardDAVTalk::VCard->new_fromfile($item);
+        push @contacts, $vcard;
+    } else {
+        require Net::CardDAVTalk;
+        my $url = URI::URL->new( $item );
 
-    my @userinfo = split /:/, $url->userinfo, 2;
-    my $CardDAV = Net::CardDAVTalk->new(
-        user => $userinfo[0],
-        password => $userinfo[1],
-        host => $url->host(),
-        port => $url->port(),
-        scheme => $url->scheme,
-        url => $url->path,
-        expandurl => 1,
-        logger => sub { warn "DAV: @_" },
-    );
+        my @userinfo = split /:/, $url->userinfo, 2;
+        my $CardDAV = Net::CardDAVTalk->new(
+            user => $userinfo[0],
+            password => $userinfo[1],
+            host => $url->host(),
+            port => $url->port(),
+            scheme => $url->scheme,
+            url => $url->path,
+            expandurl => 1,
+            logger => sub { warn "DAV: @_" },
+        );
 
-    for my $cal (@{ $CardDAV->GetAddressBooks() }) {
-        print sprintf "%s (%s)\n", $cal->{name}, $cal->{path};
-        #print Dumper $cal;
+        my $dav_addressbooks = $CardDAV->GetAddressBooks();
+        for my $cal (@$dav_addressbooks) {
+            print sprintf "%s (%s)\n", $cal->{name}, $cal->{path};
+            #print Dumper $cal;
 
-        if( $cal->{path} eq 'addresses' ) {
-            #$Data::Dumper::Useqq = 1;
-            my( $cards ) = $CardDAV->GetContacts( $cal->{path} );
-            for my $addr (@$cards) {
-                add_contact( $addr );
-            };
+            if( $cal->{path} eq 'addresses' ) {
+                #$Data::Dumper::Useqq = 1;
+                my( $cards ) = $CardDAV->GetContacts( $cal->{path} );
+                push @contacts, @$cards;
+            }
         };
     };
+
+    #my $fb_sync = time;
+    for my $addr (@contacts) {
+        add_contact( $addr );
+    };
+    #print sprintf "%d seconds taken to sync $url", time - $fb_sync;
 };
