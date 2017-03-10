@@ -206,7 +206,7 @@ L<https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/X_contactSC
 =head1 REPOSITORY
 
 The public repository of this module is
-L<http://github.com/Corion/Net-Fritz-Phonebook>.
+L<https://github.com/Corion/Net-Fritz-Phonebook>.
 
 =head1 SUPPORT
 
