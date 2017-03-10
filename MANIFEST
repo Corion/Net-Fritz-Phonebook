@@ -7,6 +7,8 @@ lib/Net/Fritz/PhonebookEntry/Number.pm
 Makefile.PL
 MANIFEST			This list of files
 MANIFEST.SKIP
+META.json
+META.yml
 README
 README.mkdn
 scripts/add-entry.pl

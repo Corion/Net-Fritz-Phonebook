@@ -17,3 +17,4 @@ Makefile$
 ^.releaserc
 ^Net-Fritz-Phonebook-.*/
 ^Net-Fritz-Phonebook-.*.tar.gz$
+^.*.cmd

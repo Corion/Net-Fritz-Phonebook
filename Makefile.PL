@@ -30,6 +30,7 @@ my %module = (
                 type => 'git',
             }
         },
+        dynamic_config   => 0, # we promise to keep META.* up-to-date
         x_static_install => 1, # we are pure Perl and don't do anything fancy
     },
     

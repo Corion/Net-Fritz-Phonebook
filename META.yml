@@ -1,0 +1,32 @@
+---
+abstract: 'manage the Fritz!Box phonebook from Perl'
+author:
+  - 'Max Maischein <corion@cpan.org>'
+build_requires:
+  Data::Dumper: '0'
+  ExtUtils::MakeMaker: '0'
+  Test::More: '0'
+configure_requires:
+  ExtUtils::MakeMaker: '0'
+dynamic_config: 0
+generated_by: 'ExtUtils::MakeMaker version 7.24, CPAN::Meta::Converter version 2.143240'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: '1.4'
+name: Net-Fritz-Phonebook
+no_index:
+  directory:
+    - t
+    - inc
+requires:
+  Carp: '0'
+  Exporter: '5'
+  Filter::signatures: '0'
+  Moo: '2'
+  Net::Fritz: '0'
+  perl: '5.006'
+resources:
+  repository: git://github.com/Corion/Net-Fritz-Phonebook.git
+version: '0.01'
+x_static_install: 1
