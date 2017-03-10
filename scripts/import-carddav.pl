@@ -2,7 +2,6 @@
 use strict;
 use Net::Fritz::Box;
 use Net::Fritz::Phonebook;
-use Net::CardDAVTalk;
 use URI::URL;
 use Data::Dumper;
 use Encode;
@@ -12,23 +11,64 @@ $VERSION = '0.01';
 
 =head1 NAME
 
-import-carddav.pl - import a CardDAV phone book
+import-carddav.pl - import a VCard or CardDAV phone book to the Fritz!Box
+
+=head1 SYNOPSIS
+
+  import-carddav.pl [OPTIONS] [VCard filename or CardDAV phonebook URLs]
+
+=head1 DESCRIPTION
+
+Import a VCard .vcf file or a CardDAV phonebook to a Fritz!Box phonebook.
+
+Existing contacts will not be overwritten.
+
+=head1 ARGUMENTS
+
+  --help        print documentation about Options and Arguments
+  --version     print version number
+
+=head1 OPTIONS
+
+  --host        URL of the Fritz!Box, default is https://fritz.box
+  --user        Username of the phone book owner on the Fritz!Box
+  --pass        Password of the phone book owner on the Fritz!Box
+  --phonebook   Name of the phone book on the Fritz!Box
+                default is 'Telefonbuch'
+
+=head1 EXAMPLE
+
+  import-carddav.pl --host https://192.168.1.1:49443/ http://user:pass@calendar/
 
 =cut
 
 use Getopt::Long;
+use Pod::Usage;
+
 GetOptions(
-    'h|host:s' => \my $host,
+    'host:s' => \my $host,
     'u|user:s' => \my $username,
     'p|pass:s' => \my $password,
     'b|phonebook:s' => \my $phonebookname,
-);
+    'help!' => \my $opt_help,
+    'version!' => \my $opt_version,
+) or pod2usage(-verbose => 1) && exit;
+
+$phonebookname ||= 'Telefonbuch';
+
+pod2usage(-verbose => 1) && exit if $opt_help;
+if( $opt_version ) {
+    print $VERSION;
+    exit;
+};
 
 my $fb = Net::Fritz::Box->new(
     username => $username,
     password => $password,
     upnp_url => $host,
 );
+
+#my $started = time;
 
 my $device = $fb->discover;
 if( my $error = $device->error ) {
@@ -53,6 +93,8 @@ if( ! $book) {
 
 # Cache what we have so we don't overwrite contacts with identical data.
 my $entries = $book->entries;
+
+#print sprintf "%d seconds taken to read current state", time - $started;
 
 sub entry_exists {
     my( $entry ) = @_;
