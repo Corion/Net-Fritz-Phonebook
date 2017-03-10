@@ -117,12 +117,12 @@ around BUILDARGS => sub ( $orig, $class, %args ) {
     if( exists $args{ contact }) {
         my $contact = $args{ contact }->[0];
         my $telephony = $contact->{telephony}->[0];
+
         %self = (
             phonebook => $args{ phonebook },
             name     => $contact->{ person }->[0]->{realName}->[0],
             uniqueid => $contact->{uniqueid}->[0],
             category => $contact->{category}->[0],
-            imageURL => $contact->{imageURL}->[0],
             numbers => [map { Net::Fritz::PhonebookEntry::Number->new( %$_ ) }
                            @{ $telephony->{number} }
                        ],
@@ -130,6 +130,9 @@ around BUILDARGS => sub ( $orig, $class, %args ) {
                            @{ $telephony->{services} }
                        ],
         );
+        if( exists $contact->{imageURL} ) {
+            $self{imageURL} = $contact->{imageURL}->[0];
+        };
     } else {
         %self = %args;
     };
