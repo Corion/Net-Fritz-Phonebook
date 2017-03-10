@@ -38,7 +38,9 @@ Existing contacts will not be overwritten.
 
 =head1 EXAMPLE
 
-  import-carddav.pl --host https://192.168.1.1:49443/ http://user:pass@calendar/
+  import-carddav.pl --host https://192.168.1.1:49443/ /user/me/contacts/*.vcf
+
+  import-carddav.pl --host https://192.168.1.1:49443/ http://user:pass@contacts.home/
 
 =cut
 
