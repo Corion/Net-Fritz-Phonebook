@@ -181,6 +181,30 @@ sub add_entry( $self, $entry ) {
     );
 };
 
+=head2 C<< $phonebook->get_entry_by_index >>
+
+  my $entry = $phonebook->get_entry_by_index( 0 );
+
+Retrieves a single entry in the phone book on the FritzBox by its index in the
+list. This avoids fetching the complete phone book, but you basically have no
+way of determining the order of entries.
+
+=cut
+
+sub get_entry_by_index( $self, $index ) {
+    my $res = $self->service->call('GetPhonebookEntry',
+        NewPhonebookID => $self->id,
+        NewPhonebookEntryID => $index, # new entry
+    );
+    croak $res->error if $res->error;
+    my $d = $res->data->{NewPhonebookEntryData};
+    use Data::Dumper;
+    $Data::Dumper::Useqq = 1;
+    warn Dumper $d;
+    my $x = XMLin( $d, ForceArray => 1 );
+    Net::Fritz::PhonebookEntry->new( phonebook => $self, contact => [$x]);
+};
+
 sub _get_service( $self, %options ) {
     my $service = $options{ service };
     if( ! $service ) {
