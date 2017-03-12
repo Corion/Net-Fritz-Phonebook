@@ -231,6 +231,21 @@ sub list( $class, %options ) {
         split /,/, $service->call('GetPhonebookList')->data->{NewPhonebookList}
 }
 
+=head2 C<< Net::Fritz::Phonebook->reload >>
+
+  $phonebook->reload();
+
+Refreshes the content of the phonebook from the Fritz!Box. This is useful if you
+have added or removed entries from the phone book and want to fetch the state
+on the Fritz!Box again.
+
+=cut
+
+sub reload( $self ) {
+    delete $self->{content};
+    delete $self->{entries};
+};
+
 1;
 
 =head1 SEE ALSO
