@@ -169,10 +169,24 @@ Saves an entry in the phone book on the FritzBox.
 
 =cut
 
+#        if( $action eq 'SetPhonebookEntry' and $arg eq 'NewPhonebookEntryData' ) {
+#        my %entities = qw( < &lt; > &gt; & &amp; );
+#        my $x = $call_args{$arg};
+#        $x =~ s!([<>&])!$entities{ $1 }!ge;
+#        $x =~ s!([^\x00-\x7f])!"&#" . ord($1) . ";"!ge;
+#        print $x;
+#        my $xml = sprintf '<NewPhonebookEntryData xsi:type="xsd:string">%s</NewPhonebookEntryData>',
+#            $x;
+#        push @args, SOAP::Data->name($arg)->value($xml)->type('xml');
+
+
 sub add_entry( $self, $entry ) {
     my $s = $entry->build_structure;
 
     my $xml = XMLout({ contact => [$s]});
+    #use Data::Dumper;
+    #$Data::Dumper::Useqq = 1;
+    #print Dumper \$xml;
 
     my $res = $self->service->call('SetPhonebookEntry',
         NewPhonebookID => $self->id,
