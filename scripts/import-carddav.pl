@@ -135,11 +135,7 @@ sub entry_is_different {
 
 sub add_contact {
     my( $vcard ) = @_;
-    my $name = encode('Latin-1', $vcard->VFN);
-
-    $name =~ s!\x{fffd}!!g;
-    #$Data::Dumper::Useqq = 1;
-    #warn Dumper \$name;
+    my $name = $vcard->VFN;
     my $contact = Net::Fritz::PhonebookEntry->new(
         name => $name,
         # I need a better unifier - the uniqueid gets assigned by the fb
