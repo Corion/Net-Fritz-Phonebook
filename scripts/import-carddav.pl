@@ -181,10 +181,8 @@ for my $item (@ARGV) {
         my $dav_addressbooks = $CardDAV->GetAddressBooks();
         for my $cal (@$dav_addressbooks) {
             print sprintf "%s (%s)\n", $cal->{name}, $cal->{path};
-            #print Dumper $cal;
 
             if( $cal->{path} eq 'addresses' ) {
-                #$Data::Dumper::Useqq = 1;
                 my( $cards ) = $CardDAV->GetContacts( $cal->{path} );
                 push @contacts, @$cards;
             }

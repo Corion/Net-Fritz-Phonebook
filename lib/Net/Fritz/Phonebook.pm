@@ -12,8 +12,6 @@ use Net::Fritz::PhonebookEntry;
 use vars '$VERSION';
 $VERSION = '0.01';
 
-use Data::Dumper;
-
 =head1 NAME
 
 Net::Fritz::Phonebook - manage the Fritz!Box phonebook from Perl
@@ -110,7 +108,6 @@ has 'content' => (
     default => sub($self) {
         my $res = $self->service->fritz->_ua->get($self->url);
         my $r = $res->decoded_content;
-        print $r;
         $self->_xs->parse_string( $r );
     },
 );

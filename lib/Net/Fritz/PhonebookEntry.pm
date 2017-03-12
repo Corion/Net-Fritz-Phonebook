@@ -11,8 +11,6 @@ use Net::Fritz::PhonebookEntry::Mail;
 use vars '$VERSION';
 $VERSION = '0.01';
 
-use Data::Dumper;
-
 =head1 NAME
 
 Net::Fritz::PhonebookEntry - a Fritz!Box phone book entry
@@ -134,6 +132,8 @@ around BUILDARGS => sub ( $orig, $class, %args ) {
             $self{imageURL} = $contact->{imageURL}->[0];
         };
     } else {
+    #use Data::Dumper;
+    #warn Dumper \%args;
         %self = %args;
     };
     return $class->$orig( %self );
