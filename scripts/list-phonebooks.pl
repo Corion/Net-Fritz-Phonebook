@@ -2,13 +2,14 @@
 use strict;
 use Net::Fritz::Box;
 use Net::Fritz::Phonebook;
-use Data::Dumper;
+use Encoding 'encode';
 
 use Getopt::Long;
 GetOptions(
     'h|host:s' => \my $host,
     'u|user:s' => \my $username,
     'p|pass:s' => \my $password,
+    'b|phonebook:s' => \my $phonebookname,
 );
 
 my $fb = Net::Fritz::Box->new(
@@ -21,30 +22,23 @@ if( my $error = $device->error ) {
     die $error
 };
 
-my $services = $device->find_service_names(qr/X_AVM-DE_OnTel/);
-for my $service (@{ $services->data }) {
-    #print $service->dump;
-    my $phonebooks = $service->call('GetPhonebookList');
-    if( my $error = $phonebooks->error ) {
-        die "Phonebook: $error";
-    };
+`chcp 65001 2>&1`;
+binmode *STDOUT, ':encoding(UTF-8)';
 
-    my @items = split /,/, $phonebooks->data->{NewPhonebookList};
-    
-    for my $bookid (@items) {
-        my $book = Net::Fritz::Phonebook->new(
-            service => $service,
-            id => $bookid,
-        );
-        #print Dumper $book->content;
-        print $book->name, "\n";
-        for my $e (@{ $book->entries }) {
-            delete $e->{phonebook};
-            print join "\t", $e->name, $e->category, (map { $_->type, $_->content } @{ $e->numbers }), "\n";
-        };
-    };
-    
+my @phonebooks;
+if( $phonebookname ) {
+    my $book = Net::Fritz::Phonebook->by_name( device => $device, name => $phonebookname )
+        or die "Couldn't find phonebook '$phonebookname'";
+    @phonebooks = $book;
+} else {
+    @phonebooks = Net::Fritz::Phonebook->list(device => $device);
 };
 
-#my $service  = $fb->get_service('DeviceInfo:1');
-#$service->call();
+for my $book (@phonebooks) {
+    #print Dumper $book->content;
+    print $book->name, "\n";
+    for my $e (@{ $book->entries }) {
+        delete $e->{phonebook};
+        print join "\t", $e->name, $e->category, (map { $_->type, $_->content } @{ $e->numbers }), "\n";
+    };
+};

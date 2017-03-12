@@ -4,6 +4,7 @@ use Moo 2;
 use Filter::signatures;
 use feature 'signatures';
 no warnings 'experimental::signatures';
+use Carp qw(croak);
 
 use XML::Simple; # because that's what Net::Fritz uses...
 use Net::Fritz::PhonebookEntry;
@@ -108,7 +109,9 @@ has 'content' => (
     is => 'lazy',
     default => sub($self) {
         my $res = $self->service->fritz->_ua->get($self->url);
-        $self->_xs->parse_string( $res->decoded_content );
+        my $r = $res->decoded_content;
+        print $r;
+        $self->_xs->parse_string( $r );
     },
 );
 
@@ -181,16 +184,51 @@ sub add_entry( $self, $entry ) {
     );
 };
 
+sub _get_service( $self, %options ) {
+    my $service = $options{ service };
+    if( ! $service ) {
+        my $services = $options{ device }->find_service_names($options{name});
+        $service = $services->data->[0];
+    };
+    $service
+}
+
+sub _get_phonebook_service( $self, %options ) {
+    $self->_get_service( name => qr/X_AVM-DE_OnTel/, %options )
+};
+
+=head2 C<< Net::Fritz::Phonebook->by_name( $device, $name ) >>
+
+  my $device = $fb->discover;
+  my $phonebook = Net::Fritz::Phonebook->by_name( device => $device, name => 'Telefonbuch' );
+
+Utility function to find a phonebook by name.
+
+=cut
+
+sub by_name( $class, %options ) {
+    my $name = delete $options{ name };
+    my @phonebooks = Net::Fritz::Phonebook->list(%options);
+
+    (my $book) = grep { $name eq $_->name }
+                   @phonebooks;
+    $book
+}
+
 =head2 C<< Net::Fritz::Phonebook->list( $service ) >>
 
   my $device = $fb->discover;
   my $services = $device->find_service_names(qr/X_AVM-DE_OnTel/);
-  my @phonebooks = Net::Fritz::Phonebook->list( $services->data->[0] );
+  my @phonebooks = Net::Fritz::Phonebook->list( service => $services->data->[0] );
 
 =cut
 
-sub list( $class, $service ) {
-    my $d = $service->call('GetPhonebookList')->data;
+sub list( $class, %options ) {
+    my $service = $class->_get_phonebook_service( %options );
+
+    my $r = $service->call('GetPhonebookList');
+    croak $r->error if $r->error;
+    my $d = $r->data;
     return
       map { $class->new( id => $_, service => $service ) }
         split /,/, $service->call('GetPhonebookList')->data->{NewPhonebookList}

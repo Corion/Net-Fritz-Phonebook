@@ -77,15 +77,10 @@ if( my $error = $device->error ) {
     die $error
 };
 
-my $services = $device->find_service_names(qr/X_AVM-DE_OnTel/);
-my $service = $services->data->[0];
-
-my @phonebooks = Net::Fritz::Phonebook->list($service);
-
-(my $book) = grep { $phonebookname eq $_->name }
-               @phonebooks;
+my $book = Net::Fritz::Phonebook->by_name( device => $device, name => $phonebookname );
 
 if( ! $book) {
+    my @phonebooks = Net::Fritz::Phonebook->list(device => $device);
     warn "Couldn't find phone book '$phonebookname'\n";
     warn "Known phonebooks on $host are\n";
     warn $_->name . "\n"
