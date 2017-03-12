@@ -5,7 +5,7 @@ use Data::Dumper;
 use Net::Fritz::PhonebookEntry;
 use XML::Simple;
 
-my $raw_contact_xml = <<"XML", ForceArray => 1;
+my $raw_contact_xml = <<"XML";
 <contact>
     <category>0</category>
     <person>
