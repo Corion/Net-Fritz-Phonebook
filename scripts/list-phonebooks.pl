@@ -2,7 +2,6 @@
 use strict;
 use Net::Fritz::Box;
 use Net::Fritz::Phonebook;
-use Encoding 'encode';
 
 use Getopt::Long;
 GetOptions(
