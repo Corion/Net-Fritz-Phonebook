@@ -38,6 +38,20 @@ has 'uniqueid' => (
     is => 'rw',
 );
 
+=head2 C<< phonebookIndex >>
+
+The index in the phonebook
+
+This is used for entry deletion. I haven't tested whether the FritzBox
+renumbers items while deleting, so the best approach is likely to delete
+multiple items starting with the highest-numbered item.
+
+=cut
+
+has 'phonebookIndex' => (
+    is => 'rw',
+);
+
 =head2 C< category >
 
 The category of this entry
@@ -118,6 +132,7 @@ around BUILDARGS => sub ( $orig, $class, %args ) {
 
         %self = (
             phonebook => $args{ phonebook },
+            phonebookIndex => $args{ phonebookIndex },
             name     => $contact->{ person }->[0]->{realName}->[0],
             uniqueid => $contact->{uniqueid}->[0],
             category => $contact->{category}->[0],

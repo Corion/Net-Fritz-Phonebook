@@ -158,7 +158,8 @@ sub delete( $self, %options ) {
 
 sub _build_entries( $self, %options ) {
     my $c = $self->content;
-    [map { Net::Fritz::PhonebookEntry->new( phonebook => $self, contact => [$_] ) } @{ $self->content->{phonebook}->[0]->{contact} }];
+    my $i = 0;
+    [map { Net::Fritz::PhonebookEntry->new( phonebook => $self, phonebookIndex => $i++, contact => [$_] ) } @{ $self->content->{phonebook}->[0]->{contact} }];
 }
 
 =head2 C<< $phonebook->add_entry >>
