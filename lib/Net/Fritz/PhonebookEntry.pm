@@ -1,5 +1,6 @@
 package Net::Fritz::PhonebookEntry;
 use strict;
+use Carp qw(croak);
 use Moo 2;
 use Filter::signatures;
 use feature 'signatures';
@@ -191,6 +192,16 @@ sub build_structure( $self ) {
         category => [$self->category],
         %optional_fields,
     };
+
+    # "pre-encode" the name for SOAP?!
+    #use Encode 'encode';
+    #use Data::Dumper;
+    #$Data::Dumper::Useqq = 1;
+    #warn "Before: ", Dumper $res->{person}->[0]->{realName}->[0];
+    #$res->{person}->[0]->{realName}->[0] = encode 'UTF-8', $res->{person}->[0]->{realName}->[0];
+    #warn "After : ", Dumper $res->{person}->[0]->{realName}->[0];
+
+    $res
 }
 
 =head2 C<< $contact->add_number( $number, $type='home' ) >>
