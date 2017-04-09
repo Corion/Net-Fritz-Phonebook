@@ -234,23 +234,29 @@ sub create( $self, %options ) {
         $options{ phonebook } ||= $self->phonebook;
         $options{ phonebook_id } = $options{ phonebook }->id;
     };
-    $self->service->call('AddPhonebookEntry',
+    $self->phonebook->service->call('AddPhonebookEntry',
         NewPhonebookID => $options{ phonebook_id },
     )->data
 }
 
 sub delete( $self, %options ) {
-    $self->service->call('DeletePhonebookEntry',
+    my $res = $self->phonebook->service->call('DeletePhonebookEntry',
         NewPhonebookID => $self->phonebook->id,
-        NewPhonebookEntryID => $self->id
-    )->data
+        NewPhonebookEntryID => $self->phonebookIndex, # euuugh
+    );
+
+    croak $res->error
+        if $res->error;
+
+    $res->data
 }
 
 sub save( $self ) {
     my $payload = $self->build_structure;
-    $self->service->call('AddPhonebookEntry',
+
+    $self->phonebook->service->call('AddPhonebookEntry',
         NewPhonebookID => $self->phonebook->id,
-        NewPhonebookEntryID => $self->id,
+        NewPhonebookEntryID => $self->uniqueid,
         NewPhonebookEntryData => $payload,
     )->data
 }
