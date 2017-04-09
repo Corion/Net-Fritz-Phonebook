@@ -27,10 +27,8 @@ Net::Fritz::Phonebook - manage the Fritz!Box phonebook from Perl
   if( my $error = $device->error ) {
       die $error
   };
-  my $services = $device->find_service_names(qr/X_AVM-DE_OnTel/);
-  my $service = $services->data->[0];
 
-  my @phonebooks = Net::Fritz::Phonebook->list($service);
+  my @phonebooks = Net::Fritz::Phonebook->list(device => $device);
 
 This module uses the API exposed by the Fritz!Box via TR064 to read, create and
 update contacts in a phone book. This uses the C<X_AVM-DE_OnTel> service, which
