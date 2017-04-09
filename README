@@ -74,6 +74,13 @@ METHODS
 
     Saves an entry in the phone book on the FritzBox.
 
+ $phonebook->get_entry_by_uniqueid
+
+      my $entry = $phonebook->get_entry_by_uniqueid( $uniqueid );
+
+    Scans all phone book entries and returns the one with the matching
+    unique id
+
  $phonebook->get_entry_by_index
 
       my $entry = $phonebook->get_entry_by_index( 0 );
