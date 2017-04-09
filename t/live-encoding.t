@@ -17,9 +17,9 @@ if( -f './fritzbox.credentials' ) {
 
 if(! $ENV{FRITZ_HOST}) {
     SKIP: {
-        skip "Live tests not run", 1;
-        exit
+        skip "Live tests not run", 11;
     };
+    exit
 };
 
 my $name = "Hans M\N{LATIN SMALL LETTER U WITH DIAERESIS}ller";
