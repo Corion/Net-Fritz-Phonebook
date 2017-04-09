@@ -13,10 +13,8 @@ SYNOPSIS
       if( my $error = $device->error ) {
           die $error
       };
-      my $services = $device->find_service_names(qr/X_AVM-DE_OnTel/);
-      my $service = $services->data->[0];
     
-      my @phonebooks = Net::Fritz::Phonebook->list($service);
+      my @phonebooks = Net::Fritz::Phonebook->list(device => $device);
 
     This module uses the API exposed by the Fritz!Box via TR064 to read,
     create and update contacts in a phone book. This uses the
@@ -76,11 +74,34 @@ METHODS
 
     Saves an entry in the phone book on the FritzBox.
 
+ $phonebook->get_entry_by_index
+
+      my $entry = $phonebook->get_entry_by_index( 0 );
+
+    Retrieves a single entry in the phone book on the FritzBox by its index
+    in the list. This avoids fetching the complete phone book, but you
+    basically have no way of determining the order of entries.
+
+ Net::Fritz::Phonebook->by_name( $device, $name )
+
+      my $device = $fb->discover;
+      my $phonebook = Net::Fritz::Phonebook->by_name( device => $device, name => 'Telefonbuch' );
+
+    Utility function to find a phonebook by name.
+
  Net::Fritz::Phonebook->list( $service )
 
       my $device = $fb->discover;
       my $services = $device->find_service_names(qr/X_AVM-DE_OnTel/);
-      my @phonebooks = Net::Fritz::Phonebook->list( $services->data->[0] );
+      my @phonebooks = Net::Fritz::Phonebook->list( service => $services->data->[0] );
+
+ Net::Fritz::Phonebook->reload
+
+      $phonebook->reload();
+
+    Refreshes the content of the phonebook from the Fritz!Box. This is
+    useful if you have added or removed entries from the phone book and
+    want to fetch the state on the Fritz!Box again.
 
 SEE ALSO
 
