@@ -194,6 +194,19 @@ sub add_entry( $self, $entry ) {
     );
 };
 
+=head2 C<< $phonebook->get_entry_by_uniqueid >>
+
+  my $entry = $phonebook->get_entry_by_uniqueid( $uniqueid );
+
+Scans all phone book entries and returns the one with the matching unique id
+
+=cut
+
+sub get_entry_by_uniqueid( $self, $uniqueid ) {
+    my ($res) = grep { $_->uniqueid == $uniqueid } @{ $self->entries };
+    $res
+};
+
 =head2 C<< $phonebook->get_entry_by_index >>
 
   my $entry = $phonebook->get_entry_by_index( 0 );
