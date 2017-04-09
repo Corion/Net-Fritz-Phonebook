@@ -18,3 +18,4 @@ Makefile$
 ^Net-Fritz-Phonebook-.*/
 ^Net-Fritz-Phonebook-.*.tar.gz$
 ^.*.cmd
+^fritzbox.credentials
