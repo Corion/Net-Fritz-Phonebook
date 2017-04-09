@@ -130,6 +130,14 @@ around BUILDARGS => sub ( $orig, $class, %args ) {
         my $contact = $args{ contact }->[0];
         my $telephony = $contact->{telephony}->[0];
 
+        # Fix up the horrible things that XML::Simple produces.
+        # I swear I only used it because Net::Fritz uses it.
+        for my $entry (qw(number services)) {
+            if( 'HASH' eq ref $telephony->{$entry}) {
+                $telephony->{$entry} = [values %{$telephony->{$entry}}];
+            };
+        };
+
         %self = (
             phonebook => $args{ phonebook },
             phonebookIndex => $args{ phonebookIndex },
