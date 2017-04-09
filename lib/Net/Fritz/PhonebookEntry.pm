@@ -132,8 +132,6 @@ around BUILDARGS => sub ( $orig, $class, %args ) {
             $self{imageURL} = $contact->{imageURL}->[0];
         };
     } else {
-    #use Data::Dumper;
-    #warn Dumper \%args;
         %self = %args;
     };
     return $class->$orig( %self );

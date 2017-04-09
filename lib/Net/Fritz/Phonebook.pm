@@ -212,9 +212,6 @@ sub get_entry_by_index( $self, $index ) {
     );
     croak $res->error if $res->error;
     my $d = $res->data->{NewPhonebookEntryData};
-    use Data::Dumper;
-    $Data::Dumper::Useqq = 1;
-    warn Dumper $d;
     my $x = XMLin( $d, ForceArray => 1 );
     Net::Fritz::PhonebookEntry->new( phonebook => $self, contact => [$x]);
 };
