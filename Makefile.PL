@@ -52,9 +52,10 @@ my %module = (
         'Net::Fritz' => 0,
         'Moo'        => 2,
     },
-    TEST_REQUIRES => {
+    TEST_REQUIRES => { # all core anyway...
         'Test::More'   => 0,
         'Data::Dumper' => 0,
+        'charnames'    => 0,
     },
 
     dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },

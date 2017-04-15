@@ -4,6 +4,7 @@ use Test::More tests => 4;
 use Data::Dumper;
 use Net::Fritz::PhonebookEntry;
 use XML::Simple;
+use charnames ':full';
 
 my $raw_contact_xml = <<"XML";
 <contact>

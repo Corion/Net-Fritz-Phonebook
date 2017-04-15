@@ -7,6 +7,7 @@ use Data::Dumper;
  # we are dealing with UTF-8 here, so we want Dumper
  # to escape everything
 $Data::Dumper::Useqq = 1;
+use charnames ':full';
 
 # Round trip test to see whether we can create, find and delete an entry
 # with umlauts in its name
