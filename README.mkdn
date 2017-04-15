@@ -1,3 +1,6 @@
+
+[![Build Status](https://travis-ci.org/Corion/Net-Fritz-Phonebook.svg?branch=master)](https://github.com/Corion/Net-Fritz-Phonebook)
+
 # NAME
 
 Net::Fritz::Phonebook - manage the Fritz!Box phonebook from Perl
