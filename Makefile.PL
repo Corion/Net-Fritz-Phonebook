@@ -36,9 +36,7 @@ my %module = (
     
     MIN_PERL_VERSION => '5.006',
 
-    ($eumm_version >= 6.3001
-      ? ('LICENSE'=> 'perl')
-      : ()),
+    'LICENSE'=> 'perl',
 
     PL_FILES            => {},
     BUILD_REQUIRES => {
