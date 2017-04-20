@@ -5,8 +5,9 @@ use Data::Dumper;
 use Net::Fritz::PhonebookEntry;
 use XML::Simple;
 use charnames ':full';
+use Encode qw(encode decode);
 
-my $raw_contact_xml = <<"XML";
+my $raw_contact_xml = encode 'UTF-8', <<"XML";
 <contact>
     <category>0</category>
     <person>
