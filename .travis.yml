@@ -27,6 +27,8 @@ before_install:
   - cd $BUILD_DIR
 install:
   - cpan-install ExtUtils::MakeMaker~6.68
+  # for building on 5.6.2
+  - cpan-install CPAN::Meta
   - cpan-install --deps
 script:
   - cd $BUILD_DIR
