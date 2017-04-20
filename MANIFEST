@@ -1,4 +1,5 @@
 .gitignore
+00-load.t
 Changes
 lib/Net/Fritz/Phonebook.pm
 lib/Net/Fritz/PhonebookEntry.pm
