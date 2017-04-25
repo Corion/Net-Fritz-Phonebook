@@ -10,7 +10,7 @@ use Net::Fritz::PhonebookEntry::Number;
 use Net::Fritz::PhonebookEntry::Mail;
 
 use vars '$VERSION';
-$VERSION = '0.02';
+$VERSION = '0.03';
 
 =head1 NAME
 

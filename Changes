@@ -1,3 +1,8 @@
+0.03 20170425
+    . Add test reporting the module versions
+    . Make test more resilient against UTF-8 (non-)encoding by XML::Simple
+    . No module changes, no need to upgrade
+
 0.02 20170410
     . Fix tests for older Perl versions
       They were missing "use charnames" to recognize the Unicode character

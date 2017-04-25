@@ -8,7 +8,7 @@ use Test::More tests => 1;
 my $module;
 
 BEGIN {
-   $module  = "Backblaze::B2";
+   $module  = "Net::Fritz::Phonebook";
    require_ok( $module );
 }
 
