@@ -15,6 +15,7 @@ README.mkdn
 scripts/add-entry.pl
 scripts/import-carddav.pl
 scripts/list-phonebooks.pl
+t/00-load.t
 t/john-doe.vcf
 t/live-encoding.t
 t/number-identity-encoding.t
