@@ -4,6 +4,7 @@ use Moo 2;
 use Filter::signatures;
 use feature 'signatures';
 no warnings 'experimental::signatures';
+use PerlX::Maybe;
 
 use Data::Dumper;
 
@@ -25,17 +26,17 @@ has 'person' => (
 
 has 'quickdial' => (
     is => 'ro',
-    default => '',
+    default => undef,
 );
 
 has 'vanity' => (
     is => 'ro',
-    default => '',
+    default => undef,
 );
 
 has 'prio' => (
     is => 'rw',
-    default => '',
+    default => undef,
 );
 
 =head2 C<< type >>
@@ -60,11 +61,11 @@ has 'content' => (
 
 sub build_structure( $self ) {
     return {
-        type      => $self->type,
-        content   => $self->content,
-        quickdial => $self->quickdial,
-        vanity    => $self->vanity,
-        prio      => $self->prio,
+              type      => $self->type,
+              content   => $self->content,
+        maybe quickdial => $self->quickdial,
+        maybe vanity    => $self->vanity,
+        maybe prio      => $self->prio,
     }
 }
 

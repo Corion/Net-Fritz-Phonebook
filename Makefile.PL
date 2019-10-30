@@ -47,8 +47,9 @@ my %module = (
         'Exporter' => 5, # for 'import'
         'Carp'     => 0,
         'Filter::signatures' => 0,
-        'Net::Fritz' => 0,
-        'Moo'        => 2,
+        'Net::Fritz'   => 0,
+        'Moo'          => 2,
+        'PerlX::Maybe' => 0,
     },
     TEST_REQUIRES => { # all core anyway...
         'Test::More'   => 0,
