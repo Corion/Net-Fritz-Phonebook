@@ -1,4 +1,9 @@
-0.03 20170425
+0.04 2019-11-xx
+    . Fix UTF-8 encoding (GH #1, thanks to Johan Vromans)
+    . Fix deletion of entries on FritzOS 6.x (GH #2, thanks to Johan Vromans)
+      We now do a binary search to find entries to delete on FritzOS 6.x,
+      while on FritzOS 7 onwards, we use DeletePhonebookEntryUID
+
 0.03 2017-04-25
     . Add test reporting the module versions
     . Make test more resilient against UTF-8 (non-)encoding by XML::Simple
