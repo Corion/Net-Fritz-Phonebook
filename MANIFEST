@@ -19,6 +19,7 @@ t/john-doe.vcf
 t/live-encoding.t
 t/number-identity-encoding.t
 t/number-identity.t
+testrules.yml
 xt/99-changes.t
 xt/99-compile.t
 xt/99-manifest.t
