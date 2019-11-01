@@ -1,6 +1,5 @@
 ---
-# This test suite cannot be run fully in parallel as we talk to a single device
-seq:
+# This test suite can be run fully in parallel
+par:
     - t/*.t
-    - par:
-        - xt/*.t
+    - xt/*.t
