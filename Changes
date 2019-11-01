@@ -1,4 +1,4 @@
-0.04 2019-11-xx
+0.04 2019-11-01
     . Fix UTF-8 encoding (GH #1, thanks to Johan Vromans)
     . Fix deletion of entries on FritzOS 6.x (GH #2, thanks to Johan Vromans)
       We now do a binary search to find entries to delete on FritzOS 6.x,

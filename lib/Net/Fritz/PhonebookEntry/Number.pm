@@ -9,7 +9,7 @@ use PerlX::Maybe;
 use Data::Dumper;
 
 use vars '$VERSION';
-$VERSION = '0.03';
+$VERSION = '0.04';
 
 has entry => (
     is => 'ro',
