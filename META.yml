@@ -4,7 +4,10 @@ author:
   - 'Max Maischein <corion@cpan.org>'
 build_requires:
   Data::Dumper: '0'
+  Encode: '0'
   ExtUtils::MakeMaker: '0'
+  Net::CardDAVTalk: '0'
+  Net::CardDAVTalk::VCard: '0'
   Test::More: '0'
   charnames: '0'
 configure_requires:
@@ -25,7 +28,10 @@ requires:
   Filter::signatures: '0'
   Moo: '2'
   Net::Fritz: '0'
+  Net::Fritz::Box: '0'
   PerlX::Maybe: '0'
+  URI::URL: '0'
+  XML::Simple: '0'
   perl: '5.006'
 resources:
   license: https://dev.perl.org/licenses/
