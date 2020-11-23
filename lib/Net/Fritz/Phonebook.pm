@@ -10,7 +10,7 @@ use XML::Simple; # because that's what Net::Fritz uses...
 use Net::Fritz::PhonebookEntry;
 
 use vars '$VERSION';
-$VERSION = '0.04';
+$VERSION = '0.05';
 
 =head1 NAME
 
