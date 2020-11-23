@@ -117,7 +117,7 @@ has 'content' => (
   };
 
 Arrayref of the entries in this phone book. Each entry is
-a L<Net::Fritz::Phonebook::Entry>.
+a L<Net::Fritz::PhonebookEntry>.
 
 =cut
 
