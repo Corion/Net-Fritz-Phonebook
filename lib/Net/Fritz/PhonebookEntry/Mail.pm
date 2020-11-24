@@ -7,8 +7,7 @@ no warnings 'experimental::signatures';
 
 use Data::Dumper;
 
-use vars '$VERSION';
-$VERSION = '0.05';
+our $VERSION = '0.05';
 
 has entry => (
     is => 'ro',
