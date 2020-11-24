@@ -5,8 +5,6 @@ use Filter::signatures;
 use feature 'signatures';
 no warnings 'experimental::signatures';
 
-use Data::Dumper;
-
 our $VERSION = '0.05';
 
 has entry => (

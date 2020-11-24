@@ -6,8 +6,6 @@ use feature 'signatures';
 no warnings 'experimental::signatures';
 use PerlX::Maybe;
 
-use Data::Dumper;
-
 our $VERSION = '0.05';
 
 has entry => (
