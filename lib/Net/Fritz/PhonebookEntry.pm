@@ -9,7 +9,7 @@ no warnings 'experimental::signatures';
 use Net::Fritz::PhonebookEntry::Number;
 use Net::Fritz::PhonebookEntry::Mail;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 our $has_DeletePhonebookEntryUID = 1;
 

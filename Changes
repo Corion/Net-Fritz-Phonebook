@@ -1,3 +1,7 @@
+0.06 2023-07-21
+    . Fix test suite to use ->VERSION() for version checks
+      Contributed by Graham Knop
+
 0.05 2020-11-23
     . Docfix to link to the proper class/module
     . No code changes, no need to upgrade

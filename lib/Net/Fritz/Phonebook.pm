@@ -9,7 +9,7 @@ use Carp qw(croak);
 use XML::Simple; # because that's what Net::Fritz uses...
 use Net::Fritz::PhonebookEntry;
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 =head1 NAME
 
