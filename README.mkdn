@@ -114,7 +114,7 @@ on the Fritz!Box again.
 
 # SEE ALSO
 
-[https://avm.de/fileadmin/user\_upload/Global/Service/Schnittstellen/X\_contactSCPD.pdf](https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/X_contactSCPD.pdf)
+[https://avm.de/fileadmin/user\_upload/Global/Service/Schnittstellen/x\_contactSCPD.pdf](https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/x_contactSCPD.pdf)
 
 # REPOSITORY
 

@@ -6,7 +6,7 @@ use feature 'signatures';
 no warnings 'experimental::signatures';
 use PerlX::Maybe;
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 has entry => (
     is => 'ro',
