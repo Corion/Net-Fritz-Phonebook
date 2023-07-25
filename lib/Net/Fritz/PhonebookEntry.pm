@@ -3,6 +3,7 @@ use strict;
 use Carp qw(croak);
 use Moo 2;
 use Filter::signatures;
+use XML::Simple qw(:strict);
 use feature 'signatures';
 no warnings 'experimental::signatures';
 
@@ -340,9 +341,14 @@ sub delete( $self, %options ) {
 }
 
 sub save( $self ) {
-    my $payload = $self->build_structure;
+    my $payload = XMLout(
+        $self->build_structure,
+        RootName => 'contact',
+        XMLDecl  => 1,
+        KeyAttr  => [],
+    );
 
-    $self->phonebook->service->call('AddPhonebookEntry',
+    $self->phonebook->service->call('SetPhonebookEntry',
         NewPhonebookID => $self->phonebook->id,
         NewPhonebookEntryID => $self->uniqueid,
         NewPhonebookEntryData => $payload,
