@@ -298,7 +298,7 @@ sub reload( $self ) {
 
 =head1 SEE ALSO
 
-L<https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/X_contactSCPD.pdf>
+L<https://avm.de/fileadmin/user_upload/Global/Service/Schnittstellen/x_contactSCPD.pdf>
 
 =cut
 
